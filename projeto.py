@@ -1,30 +1,55 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor,RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
+from sklearn.neighbors import KNeighborsClassifier
 
-base = pd.read_excel('C:\\Users\\Notebook\\OneDrive\\Documents\\Faculdade\\Nono Período\\Aprendizado de máquina\\Atividades\\Projeto ML AV2\\dadosRating_crip.xlsx')
-#excluindo colunas equivalentes a outras
-base = base.drop(['RAZÃO SOCIAL','PROCESSO ADMINISTRATIVO'] ,axis=1)
-print(len(base))
-#excluindo instancias nulas
 
-base = base.dropna(subset=['CNPJCPF'])
-base = base.dropna()
-print(len(base))
-#definindo a feature
-X = base.drop('RATING', axis=1)
+# base = pd.read_excel('C:\\Users\\Notebook\\OneDrive\\Documents\\Faculdade\\Nono Período\\Aprendizado de máquina\\Atividades\\Projeto ML AV2\\Projeto-ML-KNN\\dadosRating_crip.xlsx')
+# # excluindo colunas equivalentes a outras
+# base = base.drop(['RAZÃO SOCIAL','PROCESSO ADMINISTRATIVO'] ,axis=1)
+# # print(len(base))
+# #excluindo instancias nulas
 
-#definindo a label
-y = base['RATING']
+# base = base.dropna(subset=['CNPJCPF'])
+# base = base.dropna()
+# # print(len(base))
+# #definindo a feature
+# X = base.drop('RATING', axis=1)
 
-#dividindo a base em treino(70%) teste(15%) e validacao(15%)
-X_train, X_test_val, y_train, y_test_val = train_test_split(X, y, test_size=0.3)
-X_test, X_val, y_test, y_val = train_test_split(X_test_val, y_test_val, test_size=0.5)
-#normalizando os dados
+# #definindo a label
+# y = base['RATING']
+treino = pd.read_csv('C:\\Users\\Notebook\\OneDrive\\Documents\\Faculdade\\Nono Período\\Aprendizado de máquina\\Atividades\\Projeto ML AV2\\Projeto-ML-KNN\\treino.csv', sep=',')
+teste = pd.read_csv('C:\\Users\\Notebook\\OneDrive\\Documents\\Faculdade\\Nono Período\\Aprendizado de máquina\\Atividades\\Projeto ML AV2\\Projeto-ML-KNN\\teste.csv', sep=',')
+validacao = pd.read_csv('C:\\Users\\Notebook\\OneDrive\\Documents\\Faculdade\\Nono Período\\Aprendizado de máquina\\Atividades\\Projeto ML AV2\\Projeto-ML-KNN\\validacao.csv', sep=',')
+# dividindo a base em treino(70%) teste(15%) e validacao(15%)
 
-model = RandomForestRegressor()
-model.fit(X_train, y_train)
-model.score(X_test,y_test) 
+# separando em treino teste e validacao
+X_train = treino.drop(columns=['RATING'])
+y_train = treino['RATING']
+
+X_test = teste.drop(columns=['RATING'])
+y_test = teste['RATING']
+
+X_val = validacao.drop(columns=['RATING'])
+y_val = validacao['RATING']
+
+#testando o uso de random forest
+# clf = RandomForestClassifier(n_estimators=1000)
+# clf.fit(X_train, y_train)
+# print(f"Precisao usando o RF {clf.score(X_test, y_test)}")
+# y_preds = clf.predict(X_test)
+# print(np.mean(y_preds == y_test))
+
+#usando o KNN
+k=5
+knn = KNeighborsClassifier(n_neighbors=k)
+knn.fit(X_train, y_train)
+#mostra o quão preciso esta a previsao dos dados
+print(f"Precisao usando o KNN {knn.score(X_test, y_test)}")
+#comparando a previsao com o valor original já classificado
+y_preds = knn.predict(X_test)
+#a taxa recebida na comparacao eh a mesma do score
+print(np.mean(y_preds == y_test))
+
