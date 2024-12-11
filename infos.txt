@@ -1,2 +1,7 @@
 1 - Normalização dos dados melhorou substancialmente a precisão, partindo de 76% para 91%, devido
 ao fato do funcionamento do KNN, baseado em vizinhança, valores muito díspares atrapalham esse processo.
+
+2 - Número k=4 de vizinhos parece o mais promissor até o momento
+
+3 - Provavelmente a curva roc deve ser traçada para cada uma das 4 classes de rating da dívida, isso
+deve ser estudado mais a fundo.
