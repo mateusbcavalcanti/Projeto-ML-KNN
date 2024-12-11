@@ -1,0 +1,2 @@
+1 - Normalização dos dados melhorou substancialmente a precisão, partindo de 76% para 91%, devido
+ao fato do funcionamento do KNN, baseado em vizinhança, valores muito díspares atrapalham esse processo.
