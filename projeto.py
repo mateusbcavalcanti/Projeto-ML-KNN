@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_curve, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
 
@@ -82,13 +82,12 @@ target = pd.concat([y_train, y_test, y_val], axis=0)
 # CURVA ROC
 # fazendo previsão do resultado ser uma das classes target
 y_probs = knn.predict_proba(X_test)
-print(y_probs)
 # pega apenas a probabilidade de ser da classe da coluna 1, ou seja, rating B da divida
 
-y_probs_positive = y_probs[:, 1]
-print(y_probs_positive)
-fpr, tpr, thresholds = roc_curve(y_test, y_probs_positive)
-print(fpr)
+# y_probs_positive = y_probs[:, 1]
+# print(y_probs_positive)
+# fpr, tpr, thresholds = roc_curve(y_test, y_probs_positive)
+# print(fpr)
 # funcao para plotar a curva
 
 
@@ -103,4 +102,14 @@ def plotCurvaRoc(fpr, tpr):
     plt.show()
 
 
-plotCurvaRoc(fpr, tpr)
+# plotCurvaRoc(fpr, tpr)
+
+#MATRIZ DE CONFUSÃO
+y_preds = knn.predict(X_test)
+print(f"Matriz de confusao: {confusion_matrix(y_test, y_preds)}")
+#mostrando melhor a matriz de confusao
+print(pd.crosstab(y_test, y_preds, rownames=["Rotulo verdadeiro"], colnames=["Rotulo predito"]))
+# print(ConfusionMatrixDisplay.from_estimator(estimator=knn, X=features, y=target))
+# plt.show()
+
+print(knn.get_params())
